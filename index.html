@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Bookmarking App</title>
+</head>
+<body>
+  <header><h1>Bookmark App</h1></header>
+  <main>
+    <button class="bookmark-adder">Add new bookmark</button>
+    <form class="bookmark-form">
+      <fieldset>
+        <legend>New Bookmark</legend>
+        <label>
+          Title:
+          <input class="title" name="title" required>
+        </label>
+        <label>
+          Website:
+          <input class="website" name="url" type="url" required>
+        </label>
+        <label>
+          Rating:
+          <select name="rating" class="rating">
+            <option value="5">5 stars</option>
+            <option value="4">4 stars</option>
+            <option value="3">3 stars</option>
+            <option value="2">2 stars</option>
+            <option value="1">1 star </option>
+          </select>
+        </label>
+        <label>
+          Description:
+          <textarea rows="4" class="description" name="desc" required></textarea>
+        </label>
+      </fieldset>
+      <div class="error-display">Error</div>
+      <button type="reset" class="cancel">Cancel</button>
+      <button type="submit" class="new-bookmark-submit">Add Bookmark</button>
+    </form>
+    <label>
+      Minimum Rating:
+      <select class="star-filter">
+        <option value="">Unfiltered</option>
+        <option value="2">2 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="5">5 Stars</option>
+      </select>
+      <section class="bookmark">
+        <div class="title">Title here</div>
+        <div class="rating">***</div>
+        <button class="expander">expand</button>
+        <button class="shrinker">shrink</button>
+      </section>
+      <section class="details">
+        <div class="description">More info here</div>
+        <button class="website-link">Visite site</button>
+        <button class="delete">delete</button>
+        <button class="edit-submit">submit</button>
+      </section>
+    </label>
+  </main>
+
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
+  <script src='scripts/store.js'></script>
+  <script src='scripts/api.js'></script>
+  <script src='scripts/bookmark-display.js'></script>
+</body>
+</html>

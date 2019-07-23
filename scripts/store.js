@@ -17,7 +17,7 @@ const store = (function() {
   };
 
   const findAndDelete = function(id) {
-    return this.list.find(item => item.id === id);
+    this.list = this.list.filter(item => item.id !== id);
   };
 
   const setFilter = function(val) {

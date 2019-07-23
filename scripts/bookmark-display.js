@@ -20,10 +20,10 @@ function render() {
       Minimum Rating:
       <select class="star-filter">
         <option value="">Unfiltered</option>
-        <option value="2">2 Stars</option>
-        <option value="3">3 Stars</option>
-        <option value="4">4 Stars</option>
-        <option value="5">5 Stars</option>
+        <option value=2 ${store.filter==='2' ? 'selected' : ''}>2 Stars</option>
+        <option value=3 ${store.filter==='3' ? 'selected' : ''}>3 Stars</option>
+        <option value=4 ${store.filter==='4' ? 'selected' : ''}>4 Stars</option>
+        <option value=5 ${store.filter==='5' ? 'selected' : ''}>5 Stars</option>
       </select>
       ${(store.list.length > 0) ? generateBookmarksHTML(store.list) : noBookmarks}
   `);
@@ -35,18 +35,21 @@ function bookmarkStringifier(bookmark) {
   const extraInfo = `
   <section class="details">
     <div class="description">${bookmark.desc}</div>
-    <button class="website-link" data-url="${bookmark.url}">Visite site</button>
-    <button class="delete">delete</button>
-    <button class="edit-submit">submit</button>
+    <div class="detail-buttons">
+      <button class="delete">delete</button>
+      <button class="website-link" data-url="${bookmark.url}">Visite site</button>
+    </div>
   </section>
   `;
   
   if (bookmark.rating >= store.filter) {
     return `
       <section class="bookmark" id="${bookmark.id}">
-        <div class="title">${bookmark.title}</div>
-        <div class="rating">${bookmark.rating} stars</div>
-        ${bookmark.expanded ? displayShrinker : displayExpander}
+        <div class="basic-info">
+          <div class="title">${bookmark.title}</div>
+          <div class="rating">${bookmark.rating} &#9733 &#9734 stars</div>
+          ${bookmark.expanded ? displayShrinker : displayExpander}
+        </div>
         ${bookmark.expanded ? extraInfo : ''}
       </section>
     `;
@@ -70,7 +73,7 @@ function displayNewBookmarkForm() {
         </label>
         <label>
         Website:
-          <input class="website" name="url" type="url" required>
+          <input value="https://" class="website" name="url" type="url" required>
         </label>
         <label>
           Rating:
@@ -82,7 +85,7 @@ function displayNewBookmarkForm() {
             <option value="1">1 star </option>
           </select>
         </label>
-        <label>
+        <label class="textarea-label">
         Description:
           <textarea rows="4" class="description" name="desc" required></textarea>
         </label>
@@ -103,13 +106,17 @@ function handleAddNewBookmarkClicked() {
 
 function handleFilterChanged() {
   $('main').on('change', '.star-filter', function(event) {
-    console.log($(this).val());
+    store.filter = $(this).val();
+    render();
   });
 }
 
 function handleExpandClicked() {
   $('main').on('click', '.expander', function(event) {
-    console.log($(this));
+    const bookmarkID = $(this).parent().parent().attr('id');
+    const bkmk = store.findById(bookmarkID);
+    bkmk.expanded=true;
+    render();
   });
 }
 
@@ -121,43 +128,59 @@ function handleCancelClicked() {
   });
 }
 
+$.fn.extend({
+  serializeJson: function() {
+    const formData = new FormData(this[0]);
+    const o = {};
+    formData.forEach((val, name) => o[name] = val);
+    return o;
+  }
+});
+
 function handlebookmarkSubmit() {
   $('main').on('submit', '.bookmark-form', function(event) {
     event.preventDefault();
-    console.log($(this));
+    const newBookmark = $(event.target).serializeJson();
+    api.submitNewBookmark(newBookmark)
+      .then((res => api.handleError(res)))
+      .then(res => {
+        store.addBookmark(res);
+        store.addingBookmark=false;
+        render();
+      });
   });
 }
 
 function handleShrinkClicked() {
   $('main').on('click', '.shrinker', function(event) {
-    console.log($(this));
+    const bookmarkID = $(this).parent().parent().attr('id');
+    const bkmk = store.findById(bookmarkID);
+    bkmk.expanded=false;
+    render();
   });
 }
 
 function handleSiteClicked() {
   $('main').on('click', '.website-link', function(event) {
-    console.log($(this));
+    const id = $(this).parent().parent().parent().attr('id');
+    const bkmk = store.findById(id);
+    window.open(bkmk.url);
   });
 }
 
 function handleDeleteClicked() {
   $('main').on('click', '.delete', function(event) {
-    //get id from event
+    const id = $(this).parent().parent().parent().attr('id');
     api.deleteBookmark(id)
       .then(res => api.handleError(res))
-      .then(store.findAndDelete(id));
-    render();
+      .then(res => {
+        store.findAndDelete(id);
+        render();
+      });
   });
 }
 
-// function handleEditClicked() {
-
-// }
-
 function handlePageLoad() {
-  api.getList()
-    .then(res => api.handleError(res))
-    .then(list => store.list = list);
   handleAddNewBookmarkClicked();
   handleFilterChanged();
   handleExpandClicked();
@@ -166,7 +189,12 @@ function handlePageLoad() {
   handleShrinkClicked();
   handleSiteClicked();
   handleDeleteClicked();
-  render();
+  api.getList()
+    .then(res => api.handleError(res))
+    .then(list => {
+      store.list = list;
+      render();
+    });
 }
 
 $(handlePageLoad);

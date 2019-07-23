@@ -3,3 +3,5 @@ Need to provide functionality for reading user inputs into the form in order to 
 Need to finish event handler functions
 
 Need to add CSS styles
+
+css normalizer

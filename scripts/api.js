@@ -11,6 +11,7 @@ const api = (function() {
     if (!res.ok) {
       store.errorText = (res.status);
       store.error=true;
+      console.log(store.errorText);
       throw 'error';
     }
     return res.json();

@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 24px;
+  text-align: center;
+}
+
+main {
+  font-size: 18px;
+}
+
+input, textarea {
+  border: solid 1px rgba(0, 0, 0, .4);
+  width: 100%
+}
+
+select {
+  border: solid 1px black;
+  margin-top: 10px;
+}
+
+button {
+  border: solid 1px black;
+}
+
+.textarea-label {
+  display: block;
+}
+
+.bookmark-adder {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.basic-info {
+  border: solid 1px black;
+  margin: 10px 10px 0px 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.details {
+  border: solid 1px black;
+  margin: 0 20px 0 20px;
+  padding: 5px;
+}
+
+.shrinker, .expander {
+  width: 68px;
+}
+
+.detail-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.title {
+  width: 50%;
+}
+
+.rating {
+  margin-top: auto;
+  margin-bottom: auto;
+}

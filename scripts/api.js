@@ -9,8 +9,8 @@ const api = (function() {
   
   function handleError(res) {
     if (!res.ok) {
-      store.errorText = (res.status);
-      store.error=true;
+      // store.errorText = (res.status);
+      // store.error=true;
       console.log(store.errorText);
       throw 'error';
     }

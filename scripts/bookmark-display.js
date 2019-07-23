@@ -25,8 +25,28 @@ function render() {
         <option value=4 ${store.filter==='4' ? 'selected' : ''}>4 Stars</option>
         <option value=5 ${store.filter==='5' ? 'selected' : ''}>5 Stars</option>
       </select>
-      ${(store.list.length > 0) ? generateBookmarksHTML(store.list) : noBookmarks}
+      <div class="bookmark-list">
+        ${(store.list.length > 0) ? generateBookmarksHTML(store.list) : noBookmarks}
+      </div>
   `);
+}
+
+function starGenerator(num) {
+  if (num===1) {
+    return '&#9733&#9734&#9734&#9734&#9734';
+  }
+  if (num===2) {
+    return '&#9733&#9733&#9734&#9734&#9734';
+  }
+  if (num===3) {
+    return '&#9733&#9733&#9733&#9734&#9734';
+  }
+  if (num===4) {
+    return '&#9733&#9733&#9733&#9733&#9734';
+  }
+  if (num===5) {
+    return '&#9733&#9733&#9733&#9733&#9733';
+  }
 }
 
 function bookmarkStringifier(bookmark) {
@@ -47,7 +67,7 @@ function bookmarkStringifier(bookmark) {
       <section class="bookmark" id="${bookmark.id}">
         <div class="basic-info">
           <div class="title">${bookmark.title}</div>
-          <div class="rating">${bookmark.rating} &#9733 &#9734 stars</div>
+          <div class="rating">${starGenerator(bookmark.rating)}</div>
           ${bookmark.expanded ? displayShrinker : displayExpander}
         </div>
         ${bookmark.expanded ? extraInfo : ''}
@@ -67,17 +87,17 @@ function displayNewBookmarkForm() {
     <form class="bookmark-form">
       <fieldset>
       <legend>New Bookmark</legend>
-        <label>
+        <label class="label">
           Title:
-          <input class="title" name="title" required>
+          <input name="title" required>
         </label>
-        <label>
+        <label class="label">
         Website:
           <input value="https://" class="website" name="url" type="url" required>
         </label>
         <label>
           Rating:
-          <select name="rating" class="rating">
+          <select name="rating" class="rating-label">
             <option value="5">5 stars</option>
             <option value="4">4 stars</option>
             <option value="3">3 stars</option>
@@ -85,12 +105,12 @@ function displayNewBookmarkForm() {
             <option value="1">1 star </option>
           </select>
         </label>
-        <label class="textarea-label">
+        <label class="label">
         Description:
           <textarea rows="4" class="description" name="desc" required></textarea>
         </label>
       </fieldset>
-      ${store.error ? '<div class="error-display">Error</div>' : ''}
+      ${store.error ? `<div class="error-display">${store.errorText}</div>` : ''}
       <button type="reset" class="cancel">Cancel</button>
       <button type="submit" class="new-bookmark-submit">Add Bookmark</button>
     </form>
@@ -98,21 +118,21 @@ function displayNewBookmarkForm() {
 }
 
 function handleAddNewBookmarkClicked() {
-  $('main').on('click', '.bookmark-adder', function(event) {
+  $('main').on('click', '.bookmark-adder', function() {
     store.addingBookmark=true;
     render();
   });
 }
 
 function handleFilterChanged() {
-  $('main').on('change', '.star-filter', function(event) {
+  $('main').on('change', '.star-filter', function() {
     store.filter = $(this).val();
     render();
   });
 }
 
 function handleExpandClicked() {
-  $('main').on('click', '.expander', function(event) {
+  $('main').on('click', '.expander', function() {
     const bookmarkID = $(this).parent().parent().attr('id');
     const bkmk = store.findById(bookmarkID);
     bkmk.expanded=true;
@@ -137,7 +157,7 @@ $.fn.extend({
   }
 });
 
-function handlebookmarkSubmit() {
+function handleBookmarkSubmit() {
   $('main').on('submit', '.bookmark-form', function(event) {
     event.preventDefault();
     const newBookmark = $(event.target).serializeJson();
@@ -147,12 +167,20 @@ function handlebookmarkSubmit() {
         store.addBookmark(res);
         store.addingBookmark=false;
         render();
+      })
+      .catch(function() {
+        store.error=true;
+        if(!store.errorText) {
+          store.errorText='There was a problem reaching the server';
+        }
+        render();
+        store.error=false;
       });
   });
 }
 
 function handleShrinkClicked() {
-  $('main').on('click', '.shrinker', function(event) {
+  $('main').on('click', '.shrinker', function() {
     const bookmarkID = $(this).parent().parent().attr('id');
     const bkmk = store.findById(bookmarkID);
     bkmk.expanded=false;
@@ -161,7 +189,7 @@ function handleShrinkClicked() {
 }
 
 function handleSiteClicked() {
-  $('main').on('click', '.website-link', function(event) {
+  $('main').on('click', '.website-link', function() {
     const id = $(this).parent().parent().parent().attr('id');
     const bkmk = store.findById(id);
     window.open(bkmk.url);
@@ -169,11 +197,11 @@ function handleSiteClicked() {
 }
 
 function handleDeleteClicked() {
-  $('main').on('click', '.delete', function(event) {
+  $('main').on('click', '.delete', function() {
     const id = $(this).parent().parent().parent().attr('id');
     api.deleteBookmark(id)
       .then(res => api.handleError(res))
-      .then(res => {
+      .then(function() {
         store.findAndDelete(id);
         render();
       });
@@ -185,7 +213,7 @@ function handlePageLoad() {
   handleFilterChanged();
   handleExpandClicked();
   handleCancelClicked();
-  handlebookmarkSubmit();
+  handleBookmarkSubmit();
   handleShrinkClicked();
   handleSiteClicked();
   handleDeleteClicked();

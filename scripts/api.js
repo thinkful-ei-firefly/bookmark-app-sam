@@ -9,10 +9,8 @@ const api = (function() {
   
   function handleError(res) {
     if (!res.ok) {
-      // store.errorText = (res.status);
-      // store.error=true;
-      console.log(store.errorText);
-      throw 'error';
+      store.errorText = 'There was a problem, error code: '+res.status;
+      throw 'error code: '+res.status;
     }
     return res.json();
   }

@@ -25,7 +25,7 @@ button {
   border: solid 1px black;
 }
 
-.textarea-label {
+.label {
   display: block;
 }
 
@@ -37,7 +37,10 @@ button {
 
 .basic-info {
   border: solid 1px black;
-  margin: 10px 10px 0px 10px;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 95%;
   display: flex;
   justify-content: space-between;
   padding: 5px;
@@ -45,12 +48,16 @@ button {
 
 .details {
   border: solid 1px black;
-  margin: 0 20px 0 20px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 85%;
   padding: 5px;
 }
 
 .shrinker, .expander {
   width: 68px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .detail-buttons {
@@ -60,9 +67,58 @@ button {
 }
 .title {
   width: 50%;
+  text-align: left;
 }
 
 .rating {
+  font-size: 12px;
+}
+
+.rating, .title {
   margin-top: auto;
   margin-bottom: auto;
+  margin-right: 5px;
+}
+
+.bookmark-list {
+  margin-top: 20px;
+  text-align: center;
+}
+
+@media only screen and (min-width: 700px) {
+  h1 {
+    font-size: 38px;
+  }
+
+  main {
+    font-size: 22px;
+  }
+
+  .bookmark-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: baseline;
+    margin-top: 40px;
+  }
+
+  .bookmark {
+    flex: 1;
+    min-width: 50%;
+    max-width: 50%;
+  }
+
+  .shrinker, .expander {
+    width: 78px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  h1 {
+    font-size: 48px;
+  }
+  .bookmark {
+    min-width: 33%;
+    max-width: 33%;
+  }
 }

@@ -171,7 +171,7 @@ function handleBookmarkSubmit() {
       .catch(function() {
         store.error=true;
         if(!store.errorText) {
-          store.errorText='There was a problem reaching the server';
+          store.errorText='There was a problem reaching the server, your internet may be down';
         }
         render();
         store.error=false;

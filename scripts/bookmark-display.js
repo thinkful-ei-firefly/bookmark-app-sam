@@ -17,14 +17,16 @@ function render() {
   $('main').html(`
     ${store.addingBookmark ? displayNewBookmarkForm() : bookmarkAddButton}
     <label>
-      Minimum Rating:
-      <select class="star-filter">
-        <option value="">Unfiltered</option>
-        <option value=2 ${store.filter==='2' ? 'selected' : ''}>2 Stars</option>
-        <option value=3 ${store.filter==='3' ? 'selected' : ''}>3 Stars</option>
-        <option value=4 ${store.filter==='4' ? 'selected' : ''}>4 Stars</option>
-        <option value=5 ${store.filter==='5' ? 'selected' : ''}>5 Stars</option>
-      </select>
+      <div class="filter-area">
+        Minimum Rating:
+        <select class="star-filter">
+          <option value="">Unfiltered</option>
+          <option value=2 ${store.filter==='2' ? 'selected' : ''}>2 Stars</option>
+          <option value=3 ${store.filter==='3' ? 'selected' : ''}>3 Stars</option>
+          <option value=4 ${store.filter==='4' ? 'selected' : ''}>4 Stars</option>
+          <option value=5 ${store.filter==='5' ? 'selected' : ''}>5 Stars</option>
+        </select>
+      </div>
       <div class="bookmark-list">
         ${(store.list.length > 0) ? generateBookmarksHTML(store.list) : noBookmarks}
       </div>
